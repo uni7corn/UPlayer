@@ -14,7 +14,6 @@ import com.aliyun.vodplayer.media.IAliyunVodPlayer
  */
 class MediaPlayer private constructor(context: Context) : IAliyunVodPlayer.OnPreparedListener, IAliyunVodPlayer.OnFirstFrameStartListener, IAliyunVodPlayer.OnErrorListener, IAliyunVodPlayer.OnCompletionListener, IAliyunVodPlayer.OnSeekCompleteListener, IAliyunVodPlayer.OnStoppedListener, IAliyunVodPlayer.OnUrlTimeExpiredListener {
 
-    private var mCurrentPostion = 0
 
     private val mMediaPlayer: AliyunVodPlayer by lazy {
 
