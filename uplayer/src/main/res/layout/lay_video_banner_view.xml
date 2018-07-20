@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/space_44"
+    android:background="@android:color/holo_red_dark"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/text_b2_16"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/space_20"
+        android:drawablePadding="@dimen/space_16"
+        android:drawableStart="@drawable/ic_nav_icon_back"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="1-1 睡眠的奥秘"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|right"
+        android:contentDescription="@null"
+        android:padding="@dimen/space_20"
+        tools:ignore="RtlHardcoded" />
+
+</FrameLayout>
