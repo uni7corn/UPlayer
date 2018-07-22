@@ -19,13 +19,10 @@ abstract class BaseMediaPlayer : IMediaPlayer {
 
     private var mCurrentPosition: Int = 0
 
-    private var mPlayStatus: Int = PLAY_STATUS_IDLE
+    protected var mPlayStatus: Int = PLAY_STATUS_IDLE
 
-    private var mIsAutoPlay: Boolean = false
+    protected var mIsAutoPlay: Boolean = false
 
-    override fun serSourceData(sourceData: BaseSourceData) {
-
-    }
 
     override fun prepareAsync() {
         this.mPlayStatus = PLAY_STATUS_PREPARE
@@ -39,13 +36,13 @@ abstract class BaseMediaPlayer : IMediaPlayer {
 
     override fun play() {
         this.mPlayStatus = PLAY_STATUS_PLAYING
-
+        play(mCurrentPosition)
     }
 
     override fun play(position: Int) {
         this.mCurrentPosition = position
         this.mPlayStatus = PLAY_STATUS_PLAYING
-
+        prepareAsync()
     }
 
     override fun playSeekTo(durationPosition: Int) {
@@ -71,8 +68,10 @@ abstract class BaseMediaPlayer : IMediaPlayer {
 
     override fun stop() {
         mPlayStatus = PLAY_STATUS_STOP
+    }
 
-
+    override fun start() {
+        mPlayStatus = PLAY_STATUS_PLAYING
     }
 
     override fun reset() {

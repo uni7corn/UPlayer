@@ -44,6 +44,8 @@ interface IMediaPlayer {
 
     fun resume()
 
+    fun start()
+
     fun pause()
 
     fun stop()
