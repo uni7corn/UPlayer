@@ -1,11 +1,11 @@
 package com.uni7corn.uplayer.base
 
+import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_IDLE
+import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PAUSE
+import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PLAYING
+import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PREPARE
+import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_STOP
 import com.uni7corn.uplayer.player.IMediaPlayer
-import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_IDLE
-import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_PAUSE
-import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_PLAYING
-import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_PREPARE
-import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_STOP
 
 /**
  * Created by sm
@@ -17,7 +17,13 @@ import com.uni7corn.uplayer.player.IMediaPlayer.Companion.PLAY_STATUS_STOP
  */
 abstract class BaseMediaPlayer : IMediaPlayer {
 
-    override fun serSourceData(url: String) {
+    private var mCurrentPosition: Int = 0
+
+    private var mPlayStatus: Int = PLAY_STATUS_IDLE
+
+    private var mIsAutoPlay: Boolean = false
+
+    override fun serSourceData(sourceData: BaseSourceData) {
 
     }
 

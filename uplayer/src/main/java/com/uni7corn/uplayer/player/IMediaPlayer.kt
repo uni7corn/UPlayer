@@ -1,7 +1,13 @@
 package com.uni7corn.uplayer.player
 
+import android.content.Context
 import android.view.Surface
 import android.view.SurfaceHolder
+import com.uni7corn.uplayer.base.BaseSourceData
+import com.uni7corn.uplayer.event.OnCompletionEvent
+import com.uni7corn.uplayer.event.OnErrorEvent
+import com.uni7corn.uplayer.event.OnPreparedEvent
+import com.uni7corn.uplayer.event.OnSeekCompleteEvent
 
 /**
  * Created by dq
@@ -12,31 +18,13 @@ import android.view.SurfaceHolder
  */
 interface IMediaPlayer {
 
-    companion object {
-
-        const val PLAY_STATUS_IDLE = 0x00
-
-        const val PLAY_STATUS_PREPARE = 0x01
-        const val PLAY_STATUS_PLAYING = 0x02
-        const val PLAY_STATUS_PAUSE = 0x03
-        const val PLAY_STATUS_STOP = 0x04
-        const val PLAY_STATUS_COMPLETE = 0x05
-
-        const val PLAY_STATUS_ERROR = 0xff
-
-    }
-
-    var mCurrentPosition: Int
-
-    var mPlayStatus: Int
-
-    var mIsAutoPlay: Boolean
+    fun create(context: Context): IMediaPlayer
 
     fun setDisplay(surfaceHolder: SurfaceHolder)
 
     fun setSurface(surface: Surface)
 
-    fun serSourceData(url: String)
+    fun serSourceData(sourceData: BaseSourceData)
 
     fun prepareAsync()
 
@@ -83,6 +71,14 @@ interface IMediaPlayer {
     fun getVideoWidth(): Int
 
     fun getVideoHeight(): Int
+
+    fun setOnCompletionEvent(onCompletionEvent: OnCompletionEvent)
+
+    fun setOnErrorEvent(onErrorEvent: OnErrorEvent)
+
+    fun setOnPreparedEvent(onPreparedEvent: OnPreparedEvent)
+
+    fun setOnSeekCompleteEvent(onSeekCompleteEvent: OnSeekCompleteEvent)
 
 
 }

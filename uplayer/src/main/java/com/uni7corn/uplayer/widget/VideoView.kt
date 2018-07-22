@@ -8,7 +8,9 @@ import android.view.TextureView
 import android.view.View
 import android.widget.FrameLayout
 import com.uni7corn.uplayer.R
-import com.uni7corn.uplayer.player.MediaPlayer
+import com.uni7corn.uplayer.factory.MediaFactory
+import com.uni7corn.uplayer.player.AMediaPlayer
+import com.uni7corn.uplayer.player.IMediaPlayer
 import kotlinx.android.synthetic.main.lay_video_view.view.*
 
 /**
@@ -20,8 +22,8 @@ import kotlinx.android.synthetic.main.lay_video_view.view.*
  */
 class VideoView : FrameLayout, VideoBannerView.OnBannerCallback, VideoController.OnControllerCallback, TextureView.SurfaceTextureListener {
 
-    private val mediaPlayer: MediaPlayer by lazy {
-        MediaPlayer.create(context)
+    private val mAMediaPlayer: IMediaPlayer by lazy {
+        MediaFactory.create(context, AMediaPlayer::class.java)
     }
 
     constructor(context: Context) : this(context, null)
@@ -58,7 +60,7 @@ class VideoView : FrameLayout, VideoBannerView.OnBannerCallback, VideoController
     }
 
     private fun openMediaPlayer(surface: SurfaceTexture?) {
-        mediaPlayer.setSurface(Surface(surface))
+        mAMediaPlayer.setSurface(Surface(surface))
     }
 
 
