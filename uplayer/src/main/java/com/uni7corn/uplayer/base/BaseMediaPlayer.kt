@@ -55,4 +55,8 @@ abstract class BaseMediaPlayer : IMediaPlayer {
         this.mOnIMediaPlayerListener?.onTimedText(this, text)
     }
 
+    fun notifyOnVideoSizeChanged(width: Int, height: Int) {
+        this.mOnIMediaPlayerListener?.onVideoSizeChanged(this, width, height)
+    }
+
 }

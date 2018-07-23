@@ -1,5 +1,7 @@
 package com.uni7corn.uplayer.widget
 
+import android.app.Activity
+
 /**
  * Created by sm
  *
@@ -8,7 +10,12 @@ package com.uni7corn.uplayer.widget
  * desc:
  *
  */
-interface IVideoView {
+interface IUVideoView {
+
+    /**
+     * 绑定当前的 activity
+     */
+    fun setUp(activity: Activity): IUVideoView
 
     /**
      * 设置播放文件
@@ -34,5 +41,6 @@ interface IVideoView {
      * 退出小窗口 true?  退出成功
      */
     fun exitTinyWindow(): Boolean
+
 
 }

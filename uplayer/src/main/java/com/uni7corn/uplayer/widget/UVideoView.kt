@@ -1,7 +1,7 @@
 package com.uni7corn.uplayer.widget
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.SurfaceTexture
 import android.media.TimedText
 import android.util.AttributeSet
@@ -12,11 +12,13 @@ import android.view.View
 import android.widget.FrameLayout
 import com.uni7corn.uplayer.R
 import com.uni7corn.uplayer.builder.SourceDataBuilder
+import com.uni7corn.uplayer.delegate.ScreenDelegate
 import com.uni7corn.uplayer.factory.MediaFactory
 import com.uni7corn.uplayer.listener.OnIMediaPlayerListener
 import com.uni7corn.uplayer.player.AndroidMediaPlayer
 import com.uni7corn.uplayer.player.IMediaPlayer
 import kotlinx.android.synthetic.main.lay_video_view.view.*
+import java.lang.ref.WeakReference
 
 /**
  * Created by dq
@@ -25,13 +27,12 @@ import kotlinx.android.synthetic.main.lay_video_view.view.*
  *
  * desc: 自定义 cbti video view
  */
-class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, VideoController.OnControllerCallback, TextureView.SurfaceTextureListener, OnIMediaPlayerListener {
+class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, VideoController.OnControllerCallback, TextureView.SurfaceTextureListener, OnIMediaPlayerListener {
 
     private val TAG = UVideoView::class.java.simpleName
 
-    private var mBitmap: Bitmap? = null
-
     private val mAndroidMediaPlayer: IMediaPlayer by lazy {
+
         val iMediaPlayer = MediaFactory.create(context, AndroidMediaPlayer::class.java)
 
         // 设置监听
@@ -45,13 +46,9 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
 
     private var mSurface: Surface? = null
 
-    companion object {
+    private var mWeakActivityReference: WeakReference<Activity>? = null
 
-        private const val MODE_NORMAL_SCREEN = 0x11 //普通模式(default)
-        private const val MODE_FULL_SCREEN = 0x12   //全屏模式
-        private const val MODE_TINY_SCREEN = 0x13   //小窗口模式
-
-    }
+    private lateinit var mScreenDelegate: ScreenDelegate
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -66,6 +63,12 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
         texture_view.surfaceTextureListener = this
     }
 
+    override fun setUp(activity: Activity): IUVideoView {
+        this.mWeakActivityReference = WeakReference(activity)
+        this.mScreenDelegate = ScreenDelegate().setUp(activity)
+        return this
+    }
+
     override fun setSourceData(url: String) {
         val sourceData = SourceDataBuilder().setId(1).setTitle("测试").setUrl(url).build()
         mAndroidMediaPlayer.setSourceData(sourceData)
@@ -74,7 +77,6 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
         // SurfaceTexture缓冲大小变化
         Log.e(TAG, "onSurfaceTextureSizeChanged  width=$width   height=$height")
-
     }
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
@@ -85,13 +87,11 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         // SurfaceTexture即将被销毁
         Log.e(TAG, "onSurfaceTextureDestroyed----->")
-
         return mSurfaceTexture == null
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         Log.e(TAG, "onSurfaceTextureAvailable----->width=$width   height=$height")
-
         // SurfaceTexture准备就绪,打开播放器
         if (mSurfaceTexture == null) {
             this.mSurfaceTexture = surface
@@ -108,7 +108,9 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
         if (mSurface == null) {
             this.mSurface = Surface(surface)
         }
+
         mAndroidMediaPlayer.setSurface(mSurface!!)
+
         mAndroidMediaPlayer.play()
     }
 
@@ -127,7 +129,6 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
 
     override fun goBack() {
 
-
     }
 
     override fun showMenu() {
@@ -135,19 +136,20 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
     }
 
     override fun enterFullScreen() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.mScreenDelegate.enterFullScreen(this)
     }
 
     override fun exitFullScreen(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.mScreenDelegate.exitFullScreen()
+        return false
     }
 
     override fun enterTinyWindow() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.mScreenDelegate.enterTinyWindow(this)
     }
 
     override fun exitTinyWindow(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return false
     }
 
     override fun onCompletion(iMediaPlayer: IMediaPlayer) {
@@ -183,4 +185,7 @@ class UVideoView : FrameLayout, IVideoView, VideoBannerView.OnBannerCallback, Vi
         Log.e(TAG, "onBufferingUpdate   percent=$percent")
     }
 
+    override fun onVideoSizeChanged(iMediaPlayer: IMediaPlayer, width: Int, height: Int) {
+
+    }
 }

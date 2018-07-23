@@ -45,6 +45,7 @@ class AndroidMediaPlayer constructor(context: Context) : BaseMediaPlayer() {
         mediaPlayer.setOnSeekCompleteListener(mAndroidMediaAdapter)
         mediaPlayer.setOnCompletionListener(mAndroidMediaAdapter)
         mediaPlayer.setOnTimedTextListener(mAndroidMediaAdapter)
+        mediaPlayer.setOnVideoSizeChangedListener(mAndroidMediaAdapter)
     }
 
     override fun create(context: Context): IMediaPlayer {
@@ -118,7 +119,6 @@ class AndroidMediaPlayer constructor(context: Context) : BaseMediaPlayer() {
                     play()
                 }
             }
-
         }
     }
 
@@ -190,7 +190,7 @@ class AndroidMediaPlayer constructor(context: Context) : BaseMediaPlayer() {
     }
 
     override fun getVolume(): Int {
-        return (mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager).getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        return (mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager).getStreamVolume(AudioManager.STREAM_MUSIC)
     }
 
     override fun setAutoPlay(isAutoPlay: Boolean) {

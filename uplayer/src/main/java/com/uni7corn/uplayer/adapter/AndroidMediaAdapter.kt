@@ -21,7 +21,8 @@ class AndroidMediaAdapter constructor(iMediaPlayer: IMediaPlayer) :
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnBufferingUpdateListener,
         MediaPlayer.OnInfoListener,
-        MediaPlayer.OnTimedTextListener {
+        MediaPlayer.OnTimedTextListener,
+        MediaPlayer.OnVideoSizeChangedListener {
 
     private val mWeakReference: WeakReference<IMediaPlayer> = WeakReference(iMediaPlayer)
 
@@ -51,6 +52,10 @@ class AndroidMediaAdapter constructor(iMediaPlayer: IMediaPlayer) :
 
     override fun onTimedText(mp: MediaPlayer, text: TimedText?) {
         return getBaseMediaPlayer().notifyOnTimedText(text)
+    }
+
+    override fun onVideoSizeChanged(mp: MediaPlayer, width: Int, height: Int) {
+        getBaseMediaPlayer().notifyOnVideoSizeChanged(width, height)
     }
 
     private fun getBaseMediaPlayer(): BaseMediaPlayer {

@@ -9,7 +9,7 @@ import android.widget.FrameLayout
  *
  * on 2018/7/17
  *
- * desc:  video  视频状态view  loading/play finished/...
+ * desc:  video  视频状态view  1.buffering loading  2.finished/error tips (缓冲loading  播放完成/播放错误 tips)
  */
 class VideoStatusView : FrameLayout {
 

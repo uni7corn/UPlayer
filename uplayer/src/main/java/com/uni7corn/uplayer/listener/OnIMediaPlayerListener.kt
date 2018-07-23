@@ -27,4 +27,6 @@ interface OnIMediaPlayerListener {
 
     fun onTimedText(iMediaPlayer: IMediaPlayer, text: TimedText?)
 
+    fun onVideoSizeChanged(iMediaPlayer: IMediaPlayer, width: Int, height: Int)
+
 }
