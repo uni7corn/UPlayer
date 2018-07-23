@@ -46,7 +46,7 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
                 }
             }
             R.id.tv_lesson_list -> {
-                onControllerCallback?.showContent()
+                onControllerCallback?.showExtraContent()
             }
         }
     }
@@ -64,7 +64,7 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
         sb_progress.setOnSeekBarChangeListener(this)
     }
 
-    fun setOnControllCallback(onControllerCallback: OnControllerCallback) {
+    fun setOnControllerCallback(onControllerCallback: OnControllerCallback) {
         this.onControllerCallback = onControllerCallback
     }
 
@@ -101,10 +101,19 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
 
     interface OnControllerCallback {
 
-        fun showContent()
+        /**
+         * 显示额外的窗口内容
+         */
+        fun showExtraContent()
 
+        /**
+         * 播放
+         */
         fun play()
 
+        /**
+         * 暂停
+         */
         fun pause()
 
     }

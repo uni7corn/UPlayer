@@ -1,10 +1,8 @@
 package com.uni7corn.uplayer.base
 
+import android.media.TimedText
 import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_IDLE
-import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PAUSE
-import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PLAYING
-import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_PREPARE
-import com.uni7corn.uplayer.constant.MediaPlayStatus.PLAY_STATUS_STOP
+import com.uni7corn.uplayer.listener.OnIMediaPlayerListener
 import com.uni7corn.uplayer.player.IMediaPlayer
 
 /**
@@ -17,79 +15,44 @@ import com.uni7corn.uplayer.player.IMediaPlayer
  */
 abstract class BaseMediaPlayer : IMediaPlayer {
 
-    private var mCurrentPosition: Int = 0
+    protected var mCurrentPosition: Int = 0
 
     protected var mPlayStatus: Int = PLAY_STATUS_IDLE
 
     protected var mIsAutoPlay: Boolean = false
 
+    private var mOnIMediaPlayerListener: OnIMediaPlayerListener? = null
 
-    override fun prepareAsync() {
-        this.mPlayStatus = PLAY_STATUS_PREPARE
-
+    override fun setOnIMediaPlayerListener(onIMediaPlayerListener: OnIMediaPlayerListener) {
+        this.mOnIMediaPlayerListener = onIMediaPlayerListener
     }
 
-    override fun prepare() {
-        this.mPlayStatus = PLAY_STATUS_PREPARE
-
+    fun notifyOnPrepared() {
+        this.mOnIMediaPlayerListener?.onPrepared(this)
     }
 
-    override fun play() {
-        this.mPlayStatus = PLAY_STATUS_PLAYING
-        play(mCurrentPosition)
+    fun notifyOnError(what: Int, extra: Int): Boolean {
+        return this.mOnIMediaPlayerListener?.onError(this, what, extra)!!
     }
 
-    override fun play(position: Int) {
-        this.mCurrentPosition = position
-        this.mPlayStatus = PLAY_STATUS_PLAYING
-        prepareAsync()
+    fun notifySeekComplete() {
+        this.mOnIMediaPlayerListener?.onSeekComplete(this)
     }
 
-    override fun playSeekTo(durationPosition: Int) {
-        seekTo(durationPosition)
-        prepareAsync()
+    fun notifyOnCompletion() {
+        this.mOnIMediaPlayerListener?.onCompletion(this)
     }
 
-    override fun playNext() {
-        this.mCurrentPosition++
-        play(mCurrentPosition)
-
+    fun notifyOnBufferingUpdate(percent: Int) {
+        this.mOnIMediaPlayerListener?.onBufferingUpdate(this, percent)
     }
 
-    override fun playPre() {
-        this.mCurrentPosition--
-        play(mCurrentPosition)
+    fun notifyOnInfo(what: Int, extra: Int): Boolean {
+        return this.mOnIMediaPlayerListener?.onInfo(this, what, extra)!!
     }
 
-    override fun pause() {
-        mPlayStatus = PLAY_STATUS_PAUSE
-
+    fun notifyOnTimedText(text: TimedText?) {
+        this.mOnIMediaPlayerListener?.onTimedText(this, text)
     }
 
-    override fun stop() {
-        mPlayStatus = PLAY_STATUS_STOP
-    }
-
-    override fun start() {
-        mPlayStatus = PLAY_STATUS_PLAYING
-    }
-
-    override fun reset() {
-        mPlayStatus = PLAY_STATUS_IDLE
-
-    }
-
-    override fun release() {
-        stop()
-        reset()
-        mPlayStatus = PLAY_STATUS_IDLE
-    }
-
-    override fun getPlayerStatus(): Int {
-        return mPlayStatus
-    }
-
-    override fun isPlaying(): Boolean {
-        return mPlayStatus == PLAY_STATUS_PLAYING
-    }
 }

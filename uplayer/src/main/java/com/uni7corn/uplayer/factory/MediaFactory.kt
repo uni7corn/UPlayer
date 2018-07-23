@@ -17,6 +17,7 @@ class MediaFactory {
         fun create(context: Context, clx: Class<out IMediaPlayer>): IMediaPlayer {
             return clx.getConstructor(Context::class.java).newInstance(context)
         }
+
     }
 
 }

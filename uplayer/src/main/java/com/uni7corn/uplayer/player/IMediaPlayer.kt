@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.Surface
 import android.view.SurfaceHolder
 import com.uni7corn.uplayer.base.BaseSourceData
-import com.uni7corn.uplayer.event.OnCompletionEvent
-import com.uni7corn.uplayer.event.OnErrorEvent
-import com.uni7corn.uplayer.event.OnPreparedEvent
-import com.uni7corn.uplayer.event.OnSeekCompleteEvent
+import com.uni7corn.uplayer.listener.OnIMediaPlayerListener
 
 /**
  * Created by dq
@@ -24,7 +21,7 @@ interface IMediaPlayer {
 
     fun setSurface(surface: Surface)
 
-    fun serSourceData(sourceData: BaseSourceData)
+    fun setSourceData(sourceData: BaseSourceData)
 
     fun prepareAsync()
 
@@ -33,8 +30,6 @@ interface IMediaPlayer {
     fun play()
 
     fun play(position: Int)
-
-    fun playSeekTo(durationPosition: Int)
 
     fun playPre()
 
@@ -60,11 +55,13 @@ interface IMediaPlayer {
 
     fun isPlaying(): Boolean
 
-    fun getTotalDuration(): Long
+    fun isLooping(): Boolean
 
-    fun getCurrentPlayPosition(): Long
+    fun getTotalDuration(): Int
 
-    fun setVolume(volume: Int)
+    fun getCurrentPlayPosition(): Int
+
+    fun setVolume(volume: Float)
 
     fun getVolume(): Int
 
@@ -74,13 +71,7 @@ interface IMediaPlayer {
 
     fun getVideoHeight(): Int
 
-    fun setOnCompletionEvent(onCompletionEvent: OnCompletionEvent)
-
-    fun setOnErrorEvent(onErrorEvent: OnErrorEvent)
-
-    fun setOnPreparedEvent(onPreparedEvent: OnPreparedEvent)
-
-    fun setOnSeekCompleteEvent(onSeekCompleteEvent: OnSeekCompleteEvent)
+    fun setOnIMediaPlayerListener(onIMediaPlayerListener: OnIMediaPlayerListener)
 
 
 }
