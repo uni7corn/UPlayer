@@ -1,13 +1,10 @@
 package com.uni7corn.uplayer.delegate
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.FrameLayout
 import java.lang.ref.WeakReference
 
@@ -30,29 +27,40 @@ class ScreenDelegate {
 
     private var mScreenMode = MODE_NORMAL_SCREEN
 
-    private lateinit var mWeakActivityReference: WeakReference<Activity>
+    private lateinit var mWeakActivityReference: WeakReference<AppCompatActivity>
 
 
-    fun setUp(activity: Activity): ScreenDelegate {
+    fun setUp(activity: AppCompatActivity): ScreenDelegate {
         this.mWeakActivityReference = WeakReference(activity)
         return this
     }
 
-    fun enterFullScreen(child: View) {
-
+    @SuppressLint("RestrictedApi")
+    fun enterFullScreen(child: ViewGroup) {
         if (mScreenMode == MODE_FULL_SCREEN) return
+
+        if (child.parent != null) {
+            (child.parent as ViewGroup).removeViewInLayout(child)
+        }
 
         this.mWeakActivityReference.get()?.let {
 
-            it.window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            it.supportActionBar?.let {
+                it.hide()
+                it.setShowHideAnimationEnabled(true)
+            }
 
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            it.window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-            val contentView: ViewGroup = it.findViewById(android.R.id.content)
-            contentView.removeAllViews()
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE  //强制横屏
+            //it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR //强制横屏由传感器触发,那么今后传感器会触发屏幕旋转
+
+            val contentView: ViewGroup = it.findViewById(Window.ID_ANDROID_CONTENT)
+
+            contentView.removeAllViewsInLayout()
 
             val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
             contentView.addView(child, params)
 
             mScreenMode = MODE_FULL_SCREEN

@@ -45,7 +45,7 @@ interface IMediaPlayer {
 
     fun stop()
 
-    fun seekTo(duration: Int)
+    fun seekTo(position: Int)
 
     fun reset()
 

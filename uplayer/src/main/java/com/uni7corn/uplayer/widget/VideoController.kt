@@ -2,6 +2,7 @@ package com.uni7corn.uplayer.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -16,7 +17,7 @@ import java.util.*
  *
  * desc: CBTI  视频播放器控制器
  */
-class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+class VideoController : LinearLayout, VisibleDelegate, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private var onControllerCallback: OnControllerCallback? = null
 
@@ -75,26 +76,28 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
         }
     }
 
-    fun show() {
+    override fun show() {
         visibility = View.VISIBLE
+        autoDismiss()
     }
 
-    fun hide() {
+    override fun hide() {
         visibility = View.GONE
     }
 
-    fun autoDissmiss() {
+    override fun autoDismiss() {
         postDelayed({
             hide()
         }, 2000)
     }
 
-    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-
-    }
-
     override fun onStartTrackingTouch(seekBar: SeekBar) {
         onControllerCallback?.pause()
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+        Log.e("TAG", "progress=$progress    fromUser=$fromUser")
+        onControllerCallback?.seekTo(progress)
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
@@ -120,7 +123,7 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
                 setEnterFullScreen(true)
             }
         }
-        //autoDissmiss()
+        autoDismiss()
     }
 
     private fun updatePause(v: View) {
@@ -159,6 +162,11 @@ class VideoController : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarCha
          * 退出全屏
          */
         fun exitFullScreen(): Boolean
+
+        /**
+         * 进度调节
+         */
+        fun seekTo(position: Int): Boolean
 
     }
 }

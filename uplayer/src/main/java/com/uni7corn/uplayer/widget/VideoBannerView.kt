@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.lay_video_banner_view.view.*
  *
  * desc:视频播放 banner view  用于返回全屏播放状态或者 展示 附加功能,e.g. 倍速播放/质量调节/等等
  */
-class VideoBannerView : LinearLayout, View.OnClickListener {
+class VideoBannerView : LinearLayout, VisibleDelegate, View.OnClickListener {
 
     private var mOnBannerCallback: OnBannerCallback? = null
 
@@ -44,6 +44,20 @@ class VideoBannerView : LinearLayout, View.OnClickListener {
         }
     }
 
+    override fun show() {
+        visibility = View.VISIBLE
+        autoDismiss()
+    }
+
+    override fun hide() {
+        visibility = View.GONE
+    }
+
+    override fun autoDismiss() {
+        postDelayed({
+            hide()
+        }, 2000)
+    }
 
     interface OnBannerCallback {
 

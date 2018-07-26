@@ -33,11 +33,11 @@ class AndroidMediaPlayer constructor(context: Context) : BaseMediaPlayer() {
         val mediaPlayer = MediaPlayer()
         mediaPlayer.isLooping = true
         mediaPlayer.setAudioAttributes(AudioAttributes.Builder().setContentType(CONTENT_TYPE_MUSIC).build())
-        attachMediaListeners(mediaPlayer)
+        attachedMediaListeners(mediaPlayer)
         return@lazy mediaPlayer
     }
 
-    private fun attachMediaListeners(mediaPlayer: MediaPlayer) {
+    private fun attachedMediaListeners(mediaPlayer: MediaPlayer) {
         mediaPlayer.setOnInfoListener(mAndroidMediaAdapter)
         mediaPlayer.setOnPreparedListener(mAndroidMediaAdapter)
         mediaPlayer.setOnBufferingUpdateListener(mAndroidMediaAdapter)
@@ -145,8 +145,8 @@ class AndroidMediaPlayer constructor(context: Context) : BaseMediaPlayer() {
         mediaPlayer.stop()
     }
 
-    override fun seekTo(duration: Int) {
-        mediaPlayer.seekTo(duration)
+    override fun seekTo(position: Int) {
+        mediaPlayer.seekTo(position)
     }
 
     override fun reset() {

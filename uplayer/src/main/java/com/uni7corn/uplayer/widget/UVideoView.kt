@@ -1,9 +1,9 @@
 package com.uni7corn.uplayer.widget
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.SurfaceTexture
 import android.media.TimedText
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Surface
@@ -46,7 +46,7 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
 
     private var mSurface: Surface? = null
 
-    private var mWeakActivityReference: WeakReference<Activity>? = null
+    private var mWeakActivityReference: WeakReference<AppCompatActivity>? = null
 
     private lateinit var mScreenDelegate: ScreenDelegate
 
@@ -63,7 +63,17 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
         texture_view.surfaceTextureListener = this
     }
 
-    override fun setUp(activity: Activity): IUVideoView {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        Log.e(TAG, "onMeasure")
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        Log.e(TAG, "onSizeChanged   w=$w h=$h oldw=$oldw  oldh=$oldh")
+    }
+
+    override fun setUp(activity: AppCompatActivity): IUVideoView {
         this.mWeakActivityReference = WeakReference(activity)
         this.mScreenDelegate = ScreenDelegate().setUp(activity)
         return this
@@ -77,11 +87,12 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
         // SurfaceTexture缓冲大小变化
         Log.e(TAG, "onSurfaceTextureSizeChanged  width=$width   height=$height")
+        // texture_view.adaptVideoSize(width, height)
     }
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
         // SurfaceTexture通过updateImage更新
-        Log.e(TAG, "onSurfaceTextureUpdated----->")
+        // Log.e(TAG, "onSurfaceTextureUpdated----->")
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
@@ -140,7 +151,7 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
     }
 
     override fun exitFullScreen(): Boolean {
-        this.mScreenDelegate.exitFullScreen()
+        this.mScreenDelegate.exitFullScreen(this)
         return false
     }
 
@@ -150,6 +161,11 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
 
     override fun exitTinyWindow(): Boolean {
         return false
+    }
+
+    override fun seekTo(position: Int): Boolean {
+        mAndroidMediaPlayer.seekTo(position)
+        return true
     }
 
     override fun onCompletion(iMediaPlayer: IMediaPlayer) {

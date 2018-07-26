@@ -1,6 +1,6 @@
 package com.uni7corn.uplayer.widget
 
-import android.app.Activity
+import android.support.v7.app.AppCompatActivity
 
 /**
  * Created by sm
@@ -15,7 +15,7 @@ interface IUVideoView {
     /**
      * 绑定当前的 activity
      */
-    fun setUp(activity: Activity): IUVideoView
+    fun setUp(activity: AppCompatActivity): IUVideoView
 
     /**
      * 设置播放文件
