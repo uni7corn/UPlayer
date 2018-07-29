@@ -1,8 +1,10 @@
 package com.uni7corn.uplayer.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -76,6 +78,18 @@ class VideoController : LinearLayout, VisibleDelegate, View.OnClickListener, See
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_CANCEL,
+            MotionEvent.ACTION_UP -> {
+                autoDismiss()
+            }
+        }
+        return true
+    }
+
+
     override fun show() {
         visibility = View.VISIBLE
         autoDismiss()
@@ -123,7 +137,6 @@ class VideoController : LinearLayout, VisibleDelegate, View.OnClickListener, See
                 setEnterFullScreen(true)
             }
         }
-        autoDismiss()
     }
 
     private fun updatePause(v: View) {

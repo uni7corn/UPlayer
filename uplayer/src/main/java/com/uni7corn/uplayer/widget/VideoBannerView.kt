@@ -1,7 +1,9 @@
 package com.uni7corn.uplayer.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import com.uni7corn.uplayer.R
@@ -42,6 +44,17 @@ class VideoBannerView : LinearLayout, VisibleDelegate, View.OnClickListener {
                 mOnBannerCallback?.showMenu()
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_CANCEL,
+            MotionEvent.ACTION_UP -> {
+                autoDismiss()
+            }
+        }
+        return true
     }
 
     override fun show() {

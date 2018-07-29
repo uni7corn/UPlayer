@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference
  *
  * desc: 自定义 cbti video view
  */
-class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, VideoController.OnControllerCallback, TextureView.SurfaceTextureListener, OnIMediaPlayerListener {
+class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, VideoController.OnControllerCallback, TextureView.SurfaceTextureListener, OnIMediaPlayerListener, UTextureView.OnTextureViewCallback {
 
     private val TAG = UVideoView::class.java.simpleName
 
@@ -59,8 +59,9 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
     private fun initView(context: Context) {
         View.inflate(context, R.layout.lay_video_view, this)
         video_banner.setOnBannerCallback(this)
-        video_controller.setOnControllerCallback(this)
         texture_view.surfaceTextureListener = this
+        texture_view.setOnTextureViewCallback(this)
+        video_controller.setOnControllerCallback(this)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -82,6 +83,16 @@ class UVideoView : FrameLayout, IUVideoView, VideoBannerView.OnBannerCallback, V
     override fun setSourceData(url: String) {
         val sourceData = SourceDataBuilder().setId(1).setTitle("测试").setUrl(url).build()
         mAndroidMediaPlayer.setSourceData(sourceData)
+    }
+
+    override fun showController() {
+        video_banner.show()
+        video_controller.show()
+    }
+
+    override fun dismissController() {
+        video_banner.autoDismiss()
+        video_controller.autoDismiss()
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {

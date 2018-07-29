@@ -95,7 +95,9 @@ class ScreenDelegate {
 
         if (mScreenMode == MODE_TINY_SCREEN) return
 
-        (child as? ViewGroup)?.removeAllViews()
+        if (child.parent != null) {
+            (child.parent as ViewGroup).removeViewInLayout(child)
+        }
 
         this.mWeakActivityReference.get()?.let {
 
